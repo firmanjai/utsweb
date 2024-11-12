@@ -1,11 +1,10 @@
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Absensi extends Model
+public function up()
 {
-    use HasFactory;
+    Schema::create('absensis', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('karyawan_id')->constrained()->onDelete('cascade');
+        $table->date('tanggal');
+        $table->enum('status', ['hadir', 'tidak_hadir', 'izin', 'sakit']);
+        $table->timestamps();
+    });
 }
