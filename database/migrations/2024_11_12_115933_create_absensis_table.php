@@ -4,27 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateAbsensiTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('absensis', function (Blueprint $table) {
+        Schema::create('absensi', function (Blueprint $table) {
             $table->id();
-        $table->foreignId('karyawan_id')->constrained()->onDelete('cascade');
-        $table->date('tanggal');
-        $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha']);
-        $table->timestamps();
+            $table->unsignedBigInteger('karyawan_id');
+            $table->date('tanggal');
+            $table->enum('status', ['hadir', 'tidak hadir', 'sakit', 'izin']);
+            $table->timestamps();
+
+            // Menambahkan foreign key untuk relasi dengan tabel karyawan
+            $table->foreign('karyawan_id')->references('id')->on('karyawan')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('absensis');
+        Schema::dropIfExists('absensi');
     }
-};
+}

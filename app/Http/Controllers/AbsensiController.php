@@ -1,16 +1,18 @@
+<?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Absensi;
-use App\Models\Karyawan;
+use App\Models\Karyawan;  // Jika ada tabel karyawan
 use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
 {
-    // Menampilkan form absensi
-    public function index()
+    // Menampilkan form untuk input data absensi
+    public function create()
     {
-        $karyawans = Karyawan::all();
-        return view('absensi.index', compact('karyawans'));
+        $karyawans = Karyawan::all(); // Mendapatkan data karyawan
+        return view('absensi.create', compact('karyawans'));
     }
 
     // Menyimpan data absensi
@@ -18,22 +20,19 @@ class AbsensiController extends Controller
     {
         $request->validate([
             'karyawan_id' => 'required|exists:karyawans,id',
-            'status' => 'required|in:hadir,tidak_hadir,izin,sakit',
+            'tanggal' => 'required|date',
+            'status' => 'required|in:hadir,tidak hadir,sakit,izin',
         ]);
 
-        Absensi::create([
-            'karyawan_id' => $request->karyawan_id,
-            'tanggal' => now()->format('Y-m-d'),
-            'status' => $request->status,
-        ]);
+        Absensi::create($request->all());
 
-        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil dicatat.');
+        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil ditambahkan.');
     }
 
-    // Melihat absensi karyawan
-    public function show($karyawan_id)
+    // Menampilkan daftar absensi
+    public function index()
     {
-        $absensis = Absensi::where('karyawan_id', $karyawan_id)->get();
-        return view('absensi.show', compact('absensis'));
+        $absensis = Absensi::all();
+        return view('absensi.index', compact('absensis'));
     }
 }

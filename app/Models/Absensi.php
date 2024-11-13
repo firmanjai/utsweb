@@ -1,10 +1,21 @@
-public function up()
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Absensi extends Model
 {
-    Schema::create('absensis', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('karyawan_id')->constrained()->onDelete('cascade');
-        $table->date('tanggal');
-        $table->enum('status', ['hadir', 'tidak_hadir', 'izin', 'sakit']);
-        $table->timestamps();
-    });
+    use HasFactory;
+
+    protected $fillable = [
+        'karyawan_id', 'tanggal', 'status'
+    ];
+
+    // Relasi ke model Karyawan (jika ada tabel karyawan)
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class);
+    }
 }
